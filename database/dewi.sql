@@ -2,10 +2,10 @@
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Waktu pembuatan: 28 Des 2024 pada 05.34
--- Versi server: 8.0.30
--- Versi PHP: 8.1.10
+-- Host: 127.0.0.1
+-- Waktu pembuatan: 30 Des 2024 pada 17.59
+-- Versi server: 10.4.32-MariaDB
+-- Versi PHP: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -28,15 +28,15 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `bukti_pembayaran` (
-  `id` int NOT NULL,
-  `order_id` int NOT NULL,
+  `id` int(11) NOT NULL,
+  `order_id` int(11) NOT NULL,
   `file_path` varchar(255) NOT NULL,
   `name` varchar(100) NOT NULL,
   `number` varchar(15) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `payment_method` enum('cash','transfer') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_method` enum('cash','transfer') NOT NULL,
   `grand_total` decimal(10,2) NOT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+  `created_at` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -65,10 +65,10 @@ INSERT INTO `bukti_pembayaran` (`id`, `order_id`, `file_path`, `name`, `number`,
 --
 
 CREATE TABLE `cart` (
-  `id_cart` int NOT NULL,
-  `nama_menu` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id_cart` int(11) NOT NULL,
+  `nama_menu` varchar(300) NOT NULL,
   `harga` decimal(10,0) NOT NULL,
-  `jumlah` int NOT NULL,
+  `jumlah` int(11) NOT NULL,
   `img` varchar(255) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -77,8 +77,22 @@ CREATE TABLE `cart` (
 --
 
 INSERT INTO `cart` (`id_cart`, `nama_menu`, `harga`, `jumlah`, `img`) VALUES
-(128, 'IFUMIE GORENG', 12000, 1, 'mie1.jpg'),
-(129, 'Es Jeruk', 5000, 2, 'esjeruk.jpg');
+(136, 'IFUMIE KUAH', 12000, 2, 'ifumiekuah.jpeg'),
+(137, 'Aqua', 5000, 2, 'aqua.jpg');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `keranjang`
+--
+
+CREATE TABLE `keranjang` (
+  `id` int(11) NOT NULL,
+  `id_menu` int(11) NOT NULL,
+  `user_id` int(11) NOT NULL,
+  `jumlah` int(11) NOT NULL DEFAULT 1,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -87,7 +101,7 @@ INSERT INTO `cart` (`id_cart`, `nama_menu`, `harga`, `jumlah`, `img`) VALUES
 --
 
 CREATE TABLE `menu` (
-  `id_menu` int NOT NULL,
+  `id_menu` int(11) NOT NULL,
   `nama_menu` varchar(255) NOT NULL,
   `harga` decimal(10,0) NOT NULL,
   `kategori` enum('Makanan','Minuman') NOT NULL,
@@ -101,14 +115,11 @@ CREATE TABLE `menu` (
 INSERT INTO `menu` (`id_menu`, `nama_menu`, `harga`, `kategori`, `img`) VALUES
 (3, 'Aqua', 5000, 'Minuman', 'aqua.jpg'),
 (10, 'Es Jeruk', 5000, 'Minuman', 'esjeruk.jpg'),
-(17, 'IFUMIE GORENG', 12000, 'Makanan', 'mie1.jpg'),
-(18, 'MIE ACEH GORENG', 12000, 'Makanan', 'mie12.jpg'),
 (19, 'IFUMIE KUAH', 12000, 'Makanan', 'ifumiekuah.jpeg'),
 (20, 'MIE ACEH KUAH', 12000, 'Makanan', 'mie2.jpg'),
-(21, 'ES TEH', 5000, 'Minuman', 'esteh2.jpg'),
-(22, 'ES SUSU MILO', 8000, 'Minuman', 'es-milo-susu.jpg'),
 (23, 'ES KOPI', 8000, 'Minuman', 'es-kopi-susu.jpg'),
-(24, 'MIE INDOMIE BANGLADESH', 12000, 'Makanan', 'mie4.jpg');
+(24, 'MIE INDOMIE BANGLADESH', 12000, 'Makanan', 'mie4.jpg'),
+(25, 'saos', 13000, '', 'Cuplikan layar 2024-12-11 232615.png');
 
 -- --------------------------------------------------------
 
@@ -117,14 +128,14 @@ INSERT INTO `menu` (`id_menu`, `nama_menu`, `harga`, `kategori`, `img`) VALUES
 --
 
 CREATE TABLE `order` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `number` varchar(20) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `total_menu` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `total_menu` text NOT NULL,
   `total_harga` decimal(10,2) NOT NULL,
   `tempat` varchar(255) NOT NULL,
-  `order_date` timestamp NULL DEFAULT CURRENT_TIMESTAMP
+  `order_date` timestamp NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -179,15 +190,15 @@ INSERT INTO `order` (`id`, `name`, `number`, `email`, `total_menu`, `total_harga
 --
 
 CREATE TABLE `pembayaran` (
-  `id` int NOT NULL,
-  `name` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `number` varchar(15) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `id` int(11) NOT NULL,
+  `name` varchar(100) NOT NULL,
+  `number` varchar(15) NOT NULL,
   `email` varchar(100) NOT NULL,
-  `payment_method` enum('cash','transfer') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `tempat` enum('dine in','take away') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `payment_method` enum('cash','transfer') NOT NULL,
+  `tempat` enum('dine in','take away') NOT NULL,
   `grand_total` decimal(10,2) NOT NULL,
-  `status` enum('Menunggu','Diterima') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'Menunggu',
-  `tanggal_pemesanan` datetime DEFAULT CURRENT_TIMESTAMP
+  `status` enum('Menunggu','Diterima') DEFAULT 'Menunggu',
+  `tanggal_pemesanan` datetime DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -248,7 +259,70 @@ INSERT INTO `pembayaran` (`id`, `name`, `number`, `email`, `payment_method`, `te
 (85, 'ilham', '092824767127', 'ilham.shadiq24@gmail.com', 'transfer', 'dine in', 44000.00, 'Menunggu', '2024-12-28 00:42:44'),
 (86, 'abe', '089266262617', 'ilham.shadiq24@gmail.com', 'transfer', 'dine in', 76000.00, 'Menunggu', '2024-12-28 11:31:32'),
 (87, 'daniel', '089763451721', 'ilham.shadiq24@gmail.com', 'cash', 'take away', 46000.00, 'Menunggu', '2024-12-28 11:47:21'),
-(88, 'reysha', '12343454657632', 'ilham.shadiq24@gmail.com', 'transfer', 'dine in', 46000.00, 'Menunggu', '2024-12-28 11:48:41');
+(88, 'reysha', '12343454657632', 'ilham.shadiq24@gmail.com', 'transfer', 'dine in', 46000.00, 'Menunggu', '2024-12-28 11:48:41'),
+(89, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'cash', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:48:50'),
+(90, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'cash', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:51:38'),
+(91, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'cash', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:51:53'),
+(92, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:52:46'),
+(93, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:56:47'),
+(94, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:57:05'),
+(95, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:57:13'),
+(96, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 12:58:38'),
+(97, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:00:55'),
+(98, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:01:23'),
+(99, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:03:27'),
+(100, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:05:07'),
+(101, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:07:14'),
+(102, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:14:48'),
+(103, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:15:06'),
+(104, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:15:15'),
+(105, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:15:38'),
+(106, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:16:00'),
+(107, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:17:22'),
+(108, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:17:54'),
+(109, 'luis', '32278643267', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 22000.00, 'Menunggu', '2024-12-28 13:19:41'),
+(110, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:25:36'),
+(111, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:26:00'),
+(112, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:26:11'),
+(113, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:27:45'),
+(114, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:27:54'),
+(115, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:29:04'),
+(116, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:29:10'),
+(117, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:29:24'),
+(118, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:29:34'),
+(119, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:29:47'),
+(120, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:30:21'),
+(121, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:30:49'),
+(122, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:31:07'),
+(123, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:33:05'),
+(124, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:33:53'),
+(125, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:34:08'),
+(126, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:34:37'),
+(127, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:35:14'),
+(128, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:35:17'),
+(129, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:35:28'),
+(130, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:35:34'),
+(131, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:35:50'),
+(132, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:36:08'),
+(133, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:36:10'),
+(134, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:36:23'),
+(135, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:36:24'),
+(136, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:36:55'),
+(137, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:36:59'),
+(138, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:37:03'),
+(139, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:37:06'),
+(140, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:37:11'),
+(141, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:37:20'),
+(142, 'luis', '085159388085', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'cash', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:37:33'),
+(143, 'luis', '085159388085', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:44:08'),
+(144, 'luis', '085159388085', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'take away', 22000.00, 'Menunggu', '2024-12-28 13:46:05'),
+(145, 'luis', '085159388085', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'take away', 46000.00, 'Menunggu', '2024-12-29 03:15:27'),
+(146, 'luis', '085159388085', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'take away', 46000.00, 'Menunggu', '2024-12-29 03:15:45'),
+(147, 'luis', '085159388085', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'take away', 46000.00, 'Menunggu', '2024-12-29 03:19:59'),
+(148, 'luis', '085159388085', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'take away', 46000.00, 'Menunggu', '2024-12-29 03:20:30'),
+(149, 'luis', '085159388085', 'if23.muhammadf@mhs.ubpkarawang.ac.id', 'transfer', 'take away', 12000.00, 'Menunggu', '2024-12-29 03:22:12'),
+(150, 'luis', '0851573892', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 34000.00, 'Menunggu', '2024-12-29 05:08:50'),
+(151, 'luis', '0851573892', 'if23.danielpardede@mhs.ubpkarawang.ac.id', 'transfer', 'dine in', 34000.00, 'Menunggu', '2024-12-29 05:20:12');
 
 -- --------------------------------------------------------
 
@@ -257,11 +331,11 @@ INSERT INTO `pembayaran` (`id`, `name`, `number`, `email`, `payment_method`, `te
 --
 
 CREATE TABLE `users` (
-  `id` int NOT NULL,
+  `id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `role` enum('admin','user') DEFAULT NULL,
-  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -291,6 +365,14 @@ ALTER TABLE `bukti_pembayaran`
 --
 ALTER TABLE `cart`
   ADD PRIMARY KEY (`id_cart`);
+
+--
+-- Indeks untuk tabel `keranjang`
+--
+ALTER TABLE `keranjang`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_menu` (`id_menu`),
+  ADD KEY `user_id` (`user_id`);
 
 --
 -- Indeks untuk tabel `menu`
@@ -324,37 +406,43 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT untuk tabel `bukti_pembayaran`
 --
 ALTER TABLE `bukti_pembayaran`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT untuk tabel `cart`
 --
 ALTER TABLE `cart`
-  MODIFY `id_cart` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=131;
+  MODIFY `id_cart` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+
+--
+-- AUTO_INCREMENT untuk tabel `keranjang`
+--
+ALTER TABLE `keranjang`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT untuk tabel `menu`
 --
 ALTER TABLE `menu`
-  MODIFY `id_menu` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id_menu` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT untuk tabel `order`
 --
 ALTER TABLE `order`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 --
 -- AUTO_INCREMENT untuk tabel `pembayaran`
 --
 ALTER TABLE `pembayaran`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=152;
 
 --
 -- AUTO_INCREMENT untuk tabel `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
@@ -365,6 +453,13 @@ ALTER TABLE `users`
 --
 ALTER TABLE `bukti_pembayaran`
   ADD CONSTRAINT `bukti_pembayaran_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `pembayaran` (`id`) ON DELETE CASCADE;
+
+--
+-- Ketidakleluasaan untuk tabel `keranjang`
+--
+ALTER TABLE `keranjang`
+  ADD CONSTRAINT `keranjang_ibfk_1` FOREIGN KEY (`id_menu`) REFERENCES `menu` (`id_menu`) ON DELETE CASCADE,
+  ADD CONSTRAINT `keranjang_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
