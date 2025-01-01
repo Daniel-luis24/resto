@@ -40,12 +40,18 @@ if (isset($_POST['add_to_cart'])) {
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
     <link rel="stylesheet" href="css/style.min.css">
 
-    <!-- Modernizr JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
-
     <!-- Internal CSS for improved design -->
     <style>
-        /* Card container */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 100%;
+        }
+
         .card-container {
             display: flex;
             align-items: center;
@@ -56,15 +62,16 @@ if (isset($_POST['add_to_cart'])) {
             padding: 15px;
             margin-bottom: 20px;
             transition: transform 0.3s ease-in-out;
+            width: 100%;
         }
 
         .card-container:hover {
             transform: scale(1.05);
         }
 
-        /* Styling untuk gambar menu */
         .menu-img {
             margin-right: 20px;
+            border-radius: 50%;
         }
 
         .menu-name {
@@ -79,7 +86,6 @@ if (isset($_POST['add_to_cart'])) {
             margin-bottom: 15px;
         }
 
-        /* Styling untuk tombol Add to Cart */
         .btn-add-cart {
             background-color: #28a745;
             color: white;
@@ -95,8 +101,48 @@ if (isset($_POST['add_to_cart'])) {
             background-color: #218838;
         }
 
-        /* Responsive design */
+        #navbar-header .navbar-nav {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        #navbar-header .navbar-toggler {
+            border: none;
+        }
+
+        #navbar-header .navbar-collapse {
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        #navbar-header .navbar-nav .nav-item {
+            margin-left: 15px;
+            margin-right: 15px;
+        }
+
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 9999;
+            background-color: #fff;
+            width: 100%;
+        }
+
+        .cart-mobile {
+            display: none;
+        }
+
         @media (max-width: 768px) {
+            .cart-mobile {
+                display: inline-block;
+                position: absolute;
+                right: 20px;
+                top: 10px;
+                font-size: 1.2rem;
+                z-index: 1000;
+            }
+
             .menus {
                 flex-direction: column;
                 text-align: center;
@@ -106,30 +152,91 @@ if (isset($_POST['add_to_cart'])) {
                 flex-direction: column;
                 align-items: center;
                 text-align: center;
+                padding: 20px;
             }
 
             .menu-img {
                 margin-bottom: 15px;
+                width: 120px;
+                height: 120px;
+            }
+
+            .menu-name {
+                font-size: 1.1rem;
+            }
+
+            .menu-price {
+                font-size: 1rem;
             }
 
             .text-wrap {
                 width: 100%;
             }
+
+            .navbar-collapse {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            .navbar-nav {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+            }
+
+            .navbar-toggler {
+                display: block;
+                margin: 0 auto;
+            }
+
+            .navbar-nav .nav-item {
+                margin: 5px 0;
+            }
+
+            .navbar-nav .nav-link {
+                text-align: center;
+                padding: 8px;
+            }
+
+            .logo {
+                position: absolute;
+                left: 50%;
+                transform: translateX(-50%);
+            }
         }
 
-        
-    </style>
+        @media (max-width: 480px) {
+            .menu-name {
+                font-size: 1rem;
+            }
 
+            .menu-price {
+                font-size: 0.9rem;
+            }
+
+            .btn-add-cart {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
 </head>
 
-<body data-spy="scroll" data-target="#navbar">
+<body>
     <div id="canvas-overlay"></div>
     <div class="boxed-page">
         <nav id="navbar-header" class="navbar navbar-expand-lg">
-            <div class="container" style="display: flex; justify-content: space-between; align-items: center; position: relative;">
-              
+            <a class="text-dark cart-mobile" href="keranjang.php">
+                <?php
+                $select_rows = mysqli_query($koneksi, "SELECT * FROM `cart`") or die('query failed');
+                $row_count = mysqli_num_rows($select_rows);
+                echo $row_count; ?>
+                <i class="fas fa-shopping-cart"></i>
+            </a>
+            <div class="container">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="lnr lnr-menu"></span>
+                    <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -137,7 +244,7 @@ if (isset($_POST['add_to_cart'])) {
                         <li class="nav-item" style="margin: 0 10px;">
                             <a class="nav-link" href="index.php">Home</a>
                         </li>
-                        
+
                         <li class="nav-item" style="margin: 0 10px;">
                             <a class="nav-link" href="keranjang.php">
                                 <?php
@@ -149,8 +256,7 @@ if (isset($_POST['add_to_cart'])) {
                         </li>
                     </ul>
 
-                    <!-- Logo ditempatkan di tengah -->
-                    <a class="navbar-brand" href="index.php" style="position: absolute; left: 50%; transform: translateX(-50%);">
+                    <a class="navbar-brand logo" href="index.php">
                         <img src="img/logoo.jpg" alt="Logo" style="max-height: 50px;">
                     </a>
 
@@ -163,8 +269,6 @@ if (isset($_POST['add_to_cart'])) {
             </div>
         </nav>
 
-
-        <!-- Content Section -->
         <section id="gtco-menu">
             <div class="container">
                 <div class="section-content">
@@ -236,11 +340,8 @@ if (isset($_POST['add_to_cart'])) {
                 </div>
             </div>
         </section>
-        <!-- End of Content Section -->
 
-        <!-- Footer Section -->
         <?php include "footer.php" ?>
-        <!-- End of Footer Section -->
     </div>
 </body>
 
