@@ -129,20 +129,7 @@ if (isset($_POST['add_to_cart'])) {
             width: 100%;
         }
 
-        .cart-mobile {
-            display: none;
-        }
-
         @media (max-width: 768px) {
-            .cart-mobile {
-                display: inline-block;
-                position: absolute;
-                right: 20px;
-                top: 10px;
-                font-size: 1.2rem;
-                z-index: 1000;
-            }
-
             .menus {
                 flex-direction: column;
                 text-align: center;
@@ -183,6 +170,7 @@ if (isset($_POST['add_to_cart'])) {
                 display: flex;
                 flex-direction: column;
                 width: 100%;
+                margin-bottom: 50px;
             }
 
             .navbar-toggler {
@@ -227,45 +215,32 @@ if (isset($_POST['add_to_cart'])) {
     <div id="canvas-overlay"></div>
     <div class="boxed-page">
         <nav id="navbar-header" class="navbar navbar-expand-lg">
-            <a class="text-dark cart-mobile" href="keranjang.php">
-                <?php
-                $select_rows = mysqli_query($koneksi, "SELECT * FROM `cart`") or die('query failed');
-                $row_count = mysqli_num_rows($select_rows);
-                echo $row_count; ?>
-                <i class="fas fa-shopping-cart"></i>
-            </a>
             <div class="container">
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+                <ul class="navbar-nav d-flex" style="display: flex; justify-content: flex-start; align-items: center;">
+                    <li class="nav-item" style="margin: 0 10px;">
+                        <a class="nav-link" href="index.php">Home</a>
+                    </li>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav d-flex" style="display: flex; justify-content: flex-start; align-items: center;">
-                        <li class="nav-item" style="margin: 0 10px;">
-                            <a class="nav-link" href="index.php">Home</a>
-                        </li>
+                    <li class="nav-item" style="margin: 0 10px;">
+                        <a class="nav-link" href="keranjang.php">
+                            <?php
+                            $select_rows = mysqli_query($koneksi, "SELECT * FROM `cart`") or die('query failed');
+                            $row_count = mysqli_num_rows($select_rows);
+                            echo $row_count; ?>
+                            <i class="fas fa-shopping-cart"></i>
+                        </a>
+                    </li>
+                </ul>
 
-                        <li class="nav-item" style="margin: 0 10px;">
-                            <a class="nav-link" href="keranjang.php">
-                                <?php
-                                $select_rows = mysqli_query($koneksi, "SELECT * FROM `cart`") or die('query failed');
-                                $row_count = mysqli_num_rows($select_rows);
-                                echo $row_count; ?>
-                                <i class="fas fa-shopping-cart"></i>
-                            </a>
-                        </li>
-                    </ul>
+                <a class="navbar-brand logo" href="index.php">
+                    <img src="img/logoo.jpg" alt="Logo" style="max-height: 50px;">
+                </a>
 
-                    <a class="navbar-brand logo" href="index.php">
-                        <img src="img/logoo.jpg" alt="Logo" style="max-height: 50px;">
-                    </a>
-
-                    <ul class="navbar-nav d-flex" style="display: flex; justify-content: flex-end; align-items: center;">
-                        <li class="nav-item" style="margin: 0 10px;">
-                            <a class="nav-link" href="login/register.php">Login</a>
-                        </li>
-                    </ul>
-                </div>
+                <ul class="navbar-nav d-flex" style="display: flex; justify-content: flex-end; align-items: center;">
+                    <li class="nav-item" style="margin: 0 10px;">
+                        <a class="nav-link" href="login/register.php">Login</a>
+                    </li>
+                </ul>
             </div>
         </nav>
 
