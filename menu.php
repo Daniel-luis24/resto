@@ -27,50 +27,50 @@
     <!-- Modernizr JS for IE8 support of HTML5 elements and media queries -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
 
+    <style>
+        .navbar .navbar-brand {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+}
+.container {
+    position: relative;
+}
+.navbar-nav {
+    gap: 15px; /* Tambahkan jarak antar item */
+}
+
+    </style>
+
 </head>
 
 <body data-spy="scroll" data-target="#navbar">
     <div id="canvas-overlay"></div>
     <div class="boxed-page">
     <nav id="navbar-header" class="navbar navbar-expand-lg">
-            <div class="container">
-                <a class="navbar-brand navbar-brand-center d-flex align-items-center p-0 only-mobile" href="/">
-                    <img src="img/logoo.jpg" alt="">
-                </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="lnr lnr-menu"></span>
-                </button>
+    <div class="container">
+        <!-- Logo -->
+        <a class="navbar-brand d-flex align-items-center" href="index.php">
+            <img src="img/logoo.jpg" alt="Logo" height="50">
+        </a>
 
-                <div class="collapse navbar-collapse justify-content-between" id="navbarSupportedContent">
-                    <ul class="navbar-nav d-flex justify-content-between">
-                        <li class="nav-item only-desktop">
-                            <a class="nav-link" id="side-nav-open" href="#">
-                                <span class="lnr lnr-menu"></span>
-                            </a>
-                        </li>
-                        <div class="d-flex flex-lg-row flex-column">
-                            <li class="nav-item" style="float: left; margin-right: 150px;">
-                                <a class="nav-link" href="index.php">Home</a>
-                            </li>
-                        </div>
-                    </ul>
+        <!-- Navbar Items -->
+        <div class="navbar-collapse justify-content-between">
+            <ul class="navbar-nav d-flex justify-content-between">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.php">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="menu.php">Menu</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="login/register.php">Login</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
 
-                    <a class="navbar-brand navbar-brand-center d-flex align-items-center only-desktop" href="index.php">
-                        <img src="img/logoo.jpg" width="" height="50" alt="">
-                    </a>
-                    <ul class="navbar-nav d-flex justify-content-between">
-                        <div class="d-flex flex-lg-row flex-column">
-                            <li class="nav-item active" style="float: left; margin-left: 100px;">
-                                <a class="nav-link" href="menu.php">Menu</a>
-                            </li>
-                        </div>
-                        <li class="nav-item">
-                            <a class="nav-link" href="login/register.php">Login</a>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-        </nav>
 
         <!-- Menu Section -->
         <?php include "menukami.php" ?>
